@@ -179,3 +179,26 @@ li:hover {
    border: none;
    cursor: pointer;
 }
+.user-list{
+
+  position: absolute;
+  top: calc(100% - 270px); /* Adjust the value based on your design */
+  width: fit-content;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1; /* Ensure the user list appears above other content */
+  padding: 8px;
+}
+
+.user-list div {
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.user-list div:hover {
+ background-color: #4299e1;
+  color: #ffffff;
+  padding: 0.5rem;
+}

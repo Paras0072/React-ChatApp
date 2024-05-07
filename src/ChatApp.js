@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Avatar from "./Avatar";
 import "./index.css";
-
+const user_list = ["Alan", "Bob", "Carol", "Dean", "Elin"];
 // Function to generate a unique background color based on the user's name
 const generateBackgroundColor = (name) => {
   // Convert the name to a numeric value (hash)
@@ -41,9 +41,11 @@ const ChatMessage = ({ sender, time, message, likes, onLike }) => (
 
 const ChatApp = () => {
   const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState("");
+  const [showUserList, setShowUserList] = useState(false);
   const messageInputRef = useRef(null);
   const chatMessagesRef = useRef(null);
-  const user_list = ["Alan", "Bob", "Carol", "Dean", "Elin"];
+
   const handleLike = (index) => {
     // Create a copy of the messages array
     const updatedMessages = [...messages];
@@ -51,6 +53,14 @@ const ChatApp = () => {
     updatedMessages[index].likes++;
     // Update the state with the updated messages array
     setMessages(updatedMessages);
+  };
+  const handleUserSelection = (user) => {
+    
+    setInputText("@" + user);
+  
+    setShowUserList(false);
+
+    messageInputRef.current.focus();
   };
 
   useEffect(() => {
@@ -72,13 +82,21 @@ const ChatApp = () => {
           };
 
           setMessages([...messages, newMessage]);
-          messageInputRef.current.value = "";
+          // Clear the input after sending the message (after state update)
+          setTimeout(() => {
+            messageInputRef.current.value = "";
+          }, 0);
           chatMessagesRef.current.scrollTop =
             chatMessagesRef.current.scrollHeight;
         }
+      } else if (e.key === "@") {
+        e.preventDefault(); // Prevent the "@" character from being inserted
+        setShowUserList(true);
+        setTimeout(() => {
+          messageInputRef.current.value = "";
+        }, 0);
       }
     };
-
     messageInputRef.current.addEventListener("keypress", handleKeyPress);
 
     return () => {
@@ -172,13 +190,23 @@ const ChatApp = () => {
               />
             ))}
           </div>
-
+          {showUserList && (
+            <div className="user-list">
+              {user_list.map((user, index) => (
+                <div key={index} onClick={() => handleUserSelection(user)}>
+                  {user}
+                </div>
+              ))}
+            </div>
+          )}
           <div className="textbox">
             <input
               type="text"
               className="input"
               placeholder="Type Message"
               ref={messageInputRef}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
             />
           </div>
         </div>
